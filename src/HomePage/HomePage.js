@@ -1,6 +1,41 @@
-import React from 'react';
+import React, {useState} from 'react';
+
+import axios from 'axios';
+import Pie from 'react-chartjs-2';
+
+
 
 function HomePage() {
+    const [ currentState, setState ] = useState({});
+    var dataSource = {
+        datasets: [
+            {
+                data: [],
+                backgroundColor: [
+                    '#ffcd56',
+                    '#ff6384',
+                    '#36a2eb',
+                    '#fd6b19',
+                    '#c12200',
+                    '#000cc1',
+                    '#00c11e',
+                    '#5e3a0c'
+                ],
+            }
+        ],
+        labels: []
+    };
+
+
+    axios.get('http://localhost:3000/budget')
+    .then(function (res) {
+        console.log(res.data);
+            dataSource.datasets[0].data = res.data.budget;
+            dataSource.labels = res.data.title;
+        setState(dataSource);
+    });
+
+
   return (
     <div className="center" id="main">
 
@@ -64,7 +99,7 @@ function HomePage() {
             <div className="text-box">
                 <h1>Free</h1>
                 <p>
-                    <canvas id="myChart" width="400" height="400"></canvas>
+                    <Pie data={currentState} width={400} height={400}></Pie>
                 </p>
             </div>
 
